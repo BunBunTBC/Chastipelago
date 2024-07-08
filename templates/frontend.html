@@ -1,45 +1,13 @@
-<!DOCTYPE html> 
-<html> 
-<head> 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
-</head> 
-<body> 
-    <button id="freezeButton">Toggle Freeze</button> 
-    <div id="output"></div> 
-    <script> 
-        window.onload = function getToken() { 
-            const hash = window.location.hash.substring(1);
-            const params = JSON.parse(decodeURIComponent(hash));
-            const mainToken = params.mainToken;
-            document.getElementById("freezeButton").addEventListener("click", freezeToggle);
-            $.ajax({ 
-                url: '/process', 
-                type: 'POST', 
-                contentType: 'application/json', 
-                data: JSON.stringify({ 'value': mainToken }), 
-                success: function(response) { 
-                    let results = response; 
-                }, 
-                error: function(error) { 
-                    console.log(error); 
-                } 
-            }); 
-        } 
-        function freezeToggle() {
-            $.ajax({
-                url: '/toggleFreeze',
-                type: 'POST',
-                contentType: 'application/json',
-                data: results['session'['_id']],
-                success: function(response) {
-                    let results =  response;
-                },
-                error: function(error) {
-                    console.log(error)
-                }
-            })
-        }
-    </script> 
-</body> 
-</html> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type=module src="../static/functions.js"></script>
+  <title>Chastipelago</title>
+</head>
+<body>
+</body>
+</html>
+
 
