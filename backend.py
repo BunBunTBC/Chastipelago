@@ -4,7 +4,7 @@ import json
 import socket
   
 app = Flask(__name__,template_folder='templates') 
-headers = { 'Authorization': 'Bearer p4M6XodvwX7xO7dR1kDCJevM0cymOo9j' }
+headers = { 'Authorization': 'Bearer <API TOKEN>' }
   
 @app.route('/') 
 def init(): 
