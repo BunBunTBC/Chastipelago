@@ -30,7 +30,6 @@ inputPlayerName.placeholder = 'Player Name';
 const newButton = document.createElement('button');
 newButton.type = 'submit';
 newButton.textContent = 'Connect';
-document.body.appendChild(newButton);
 
 // Add elements to form
 form.appendChild(inputIP);
@@ -45,18 +44,16 @@ document.body.appendChild(form);
 // passes all needed information to the backend
 function sendData() {
     const formData = new FormData(form);
-    formData.append("value", mainToken)
-    console.log(formData.entries());
+    formData.append('value', mainToken)
     
-    fetch("/toggleFreeze",{
-        method:"POST",
+    fetch('/establishConnection',{
+        method:'POST',
         body: formData
     }
-)
-}
+)}
 
 // calls the sendData function when the form is submitted
-form.addEventListener("submit", (event) => {
+form.addEventListener('submit', (event) => {
     event.preventDefault();
     sendData();
 })
