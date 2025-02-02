@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request
 import requests
 import json
-import socket
+import websockets
+import asyncio
+import threading
+from client import Client, ClientConfig, GameConfig
   
 app = Flask(__name__,template_folder='templates') 
-headers = { 'Authorization': 'Bearer <API TOKEN>' }
+headers = { 'Authorization': 'Bearer <AUTH TOKEN>' }
   
 @app.route('/') 
 def init(): 
@@ -26,17 +29,19 @@ def getSessionURL(mainToken):
     # sets the url for the POST request
     return 'https://api.chaster.app/api/extensions/sessions/' + sessionID + '/action'
 
+def connect_websocket(serverPort, playerName, serverPassword):
+    client = Client(ClientConfig(serverPort, playerName, serverPassword), GameConfig("Factorio"))
+    task = asyncio.run(client.run())
 
 @app.route('/establishConnection', methods=['POST'])
 def establishConnection():
-    # receives the main token from the front end
-    mainToken = request.form['value']
-    print(request.form['serverIP'])
-    print(request.form['serverPort'])
-    print(request.form['serverPassword'])
-    print(request.form['playerName'])
+    # establishes the connection to the Archipelago server
+    connect_websocket(
+        request.form['serverPort'],     # receives server URL from form 
+        request.form['playerName'],     # receives player name from form
+        request.form['serverPassword']) # receives server password from form
 
-    # sets the url for the POST request
+    # immediately freezes the lock upon loading the Archip
     url = getSessionURL(request.form['value'])
     data = {
     'action': {
@@ -48,6 +53,19 @@ def establishConnection():
     response = requests.post(url, headers = headers, json = data)
     print(response.text)
     return mainToken
+
+def freezePlayer():
+    # immediately freezes the lock upon loading the Archip
+    url = getSessionURL(request.form['value'])
+    data = {
+    'action': {
+        'name': 'freeze'
+        }
+    }
+
+    # makes the POST request to the Chaster API
+    response = requests.post(url, headers = headers, json = data)
+    print(response.text)
 
 @app.route('/processAPItemGet', methods=['POST'])
 def processAPItemGet():
